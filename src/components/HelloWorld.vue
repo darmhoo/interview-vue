@@ -1,20 +1,30 @@
-<script setup>
-defineProps({
-  msg: {
-    type: String,
-    required: true
+<script>
+import axios from 'axios';
+export default {
+  data() {
+    return {
+      key: "a6e5ec0565d247b48e9114706242406",
+      weatherData: null,
+      baseApi: "http://api.weatherapi.com/v1"
+    }
+  },
+  methods: {
+    async getWeatherData() {
+      let res = await axios.get(`${this.baseApi}/forecase.json?key=${this.key}`);
+      console.log(res);
+    }
+  },
+
+  mounted(){
+    this.getWeatherData();
   }
-})
+}
+
 </script>
 
 <template>
   <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
-    <h3>
-      You’ve successfully created a project with
-      <a target="_blank" href="https://vitejs.dev/">Vite</a> +
-      <a target="_blank" href="https://v2.vuejs.org/">Vue 2</a>.
-    </h3>
+
   </div>
 </template>
 
@@ -35,6 +45,7 @@ h3 {
 }
 
 @media (min-width: 1024px) {
+
   .greetings h1,
   .greetings h3 {
     display: block;
