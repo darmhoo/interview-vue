@@ -9,7 +9,7 @@
   ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
   
   export default {
-    name: 'BarChart',
+    name: 'TempChart',
     components: { Bar },
     props: {
       chartData: {

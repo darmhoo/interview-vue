@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import TempChart from './TempChart.vue';
 export default {
   data() {
     return {
@@ -41,6 +42,10 @@ export default {
       <span>Pressure: </span> <span> {{ currentWeatherData?.current?.pressure_in }}</span><br>
 
     </p>
+   </div>
+
+   <div>
+    <TempChart></TempChart>
    </div>
 
 
