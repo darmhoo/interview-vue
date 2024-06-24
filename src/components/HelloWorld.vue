@@ -2,13 +2,20 @@
 import axios from 'axios';
 import TempChart from './TempChart.vue';
 export default {
+  components: {
+    TempChart
+  },
   data() {
     return {
       key: "a6e5ec0565d247b48e9114706242406",
       currentWeatherData: null,
       foreCast: null,
+      label: [],
+      temps: [],
+      chartData: {},
 
-      baseApi: "http://api.weatherapi.com/v1"
+      baseApi: "http://api.weatherapi.com/v1",
+      loaded: false
     }
   },
   methods: {
@@ -18,12 +25,25 @@ export default {
     },
 
     async getWeatherForecast() {
+      this.loaded = false;
       let res = await axios.get(`${this.baseApi}/forecast.json?key=${this.key}&q=Lagos&days=14`);
       this.foreCast = res.data.forecast;
+      console.log(this.foreCast);
+      res.data.forecast.forecastday.forEach(item => {
+        console.log(item)
+        this.label.push(item.date);
+        this.temps.push(item.day.maxtemp_c);
+
+      })
+      this.chartData = {
+        labels: this.label,
+        datasets: [{ data: this.temps }]
+      }
+      this.loaded = true
     }
   },
 
-  mounted(){
+  mounted() {
     this.getWeatherData();
     this.getWeatherForecast();
   }
@@ -33,20 +53,22 @@ export default {
 
 <template>
   <div class="">
-   <h2>The Current Weather Data for Lagos Today</h2>
-   <div>
-    <p>
-      <span>Cloud: </span> <span> {{ currentWeatherData?.current?.cloud }}</span><br>
-      <span>Condition: </span> <span> {{ currentWeatherData?.current?.condition.text }}</span> <span> <img :src="currentWeatherData?.current?.condition.icon" alt=""></span><br>
-      <span>Dew Point: </span> <span> {{ currentWeatherData?.current?.dewpoint_c }}</span><br>
-      <span>Pressure: </span> <span> {{ currentWeatherData?.current?.pressure_in }}</span><br>
+    <h2>The Current Weather Data for Lagos Today</h2>
+    <div>
+      <p>
+        <span>Cloud: </span> <span> {{ currentWeatherData?.current?.cloud }}</span><br>
+        <span>Condition: </span> <span> {{ currentWeatherData?.current?.condition.text }}</span> <span> <img
+            :src="currentWeatherData?.current?.condition.icon" alt=""></span><br>
+        <span>Dew Point: </span> <span> {{ currentWeatherData?.current?.dewpoint_c }}</span><br>
+        <span>Pressure: </span> <span> {{ currentWeatherData?.current?.pressure_in }}</span><br>
 
-    </p>
-   </div>
+      </p>
+    </div>
 
-   <div>
-    <TempChart></TempChart>
-   </div>
+    <div>
+      <h2>14 day forecast for Lagos Temp</h2>
+      <TempChart :chart-data="chartData"></TempChart>
+    </div>
 
 
   </div>
